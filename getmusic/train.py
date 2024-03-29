@@ -11,7 +11,7 @@ from getmusic.engine.logger import Logger
 from getmusic.engine.solver import Solver
 from getmusic.distributed.launch import launch
 import datetime
-import numpy  as np
+import numpy as np
 
 NODE_RANK = os.environ['INDEX'] if 'INDEX' in os.environ else 0
 NODE_RANK = int(NODE_RANK)
