@@ -141,7 +141,10 @@ def get_args():
     parser.add_argument('--decode_chord', action='store_true', default=False)
     parser.add_argument('--chord_from_single', action='store_true', default=False)
     parser.add_argument('--no_ema', action='store_false', default=True)
-    
+    parser.add_argument('--batch', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--condition_tracks', type=str, default="")
+    parser.add_argument('--content_tracks', type=str, default="")
+
     # args for modify config
     parser.add_argument(
         "opts",
@@ -648,7 +651,11 @@ def main():
                 continue
         
         conditional_track = np.array([False, False, False, False, False, False, True])
-        conditional_name = input('Select condition tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings, \'c\' for chords; multiple choices; input any other key to skip):')
+        if args.batch:
+            assert args.condition_tracks is not None
+            conditional_name = args.condition_tracks
+        else:
+            conditional_name = input('Select condition tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings, \'c\' for chords; multiple choices; input any other key to skip):')
         condition_inst = []
         if 'l' in conditional_name:
             conditional_track[0] = True
@@ -674,7 +681,11 @@ def main():
             print('You can\'t set all tracks as condition. We conduct unconditional generation based on selected content tracks. If you skip content tracks, this song is skipped.')
             
         content_track = np.array([False, False, False, False, False, False, False])
-        content_name = input('Select content tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings; multiple choices):')
+        if args.batch:
+            assert args.content_tracks is not None
+            content_name = args.content_tracks
+        else:
+            content_name = input('Select content tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings; multiple choices):')
         if 'l' in content_name:
             content_track[0] = True
         if 'b' in content_name:
