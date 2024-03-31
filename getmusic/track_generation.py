@@ -629,16 +629,23 @@ def main():
     assert args.load_path is not None
     solver.resume(path=args.load_path)
 
-    file_list = [os.path.join(args.file_path, n) for n in os.listdir(args.file_path) if (n[-4:].lower() == '.mid' or n[-5:].lower() == '.midi')]# and ('iter' not in n.lower())]
-    file_list.sort()
+    is_single_file_path = str(args.file_path).endswith('.mid') or str(args.file_path).endswith('.midi')
+    if is_single_file_path:
+        file_list = [args.file_path]
+        folder_path = os.path.dirname(args.file_path)
+    else:
+        file_list = [os.path.join(args.file_path, n) for n in os.listdir(args.file_path) if (n[-4:].lower() == '.mid' or n[-5:].lower() == '.midi')]# and ('iter' not in n.lower())]
+        file_list.sort()
+        folder_path = args.file_path
 
     for file_name in file_list:
         print(file_name)
         if '.pth' in file_name:
             continue
-        y = input('skip?')
-        if 'y' in y:
-            continue
+        if not is_single_file_path:
+            y = input('skip?')
+            if 'y' in y:
+                continue
         
         conditional_track = np.array([False, False, False, False, False, False, True])
         conditional_name = input('Select condition tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings, \'c\' for chords; multiple choices; input any other key to skip):')
@@ -711,7 +718,7 @@ def main():
 
         midi_obj = encoding_to_MIDI(oct_final, tpc, args.decode_chord)
 
-        save_path = os.path.join(args.file_path, '{}2{}-{}'.format(conditional_name, content_name, os.path.basename(file_name)))
+        save_path = os.path.join(folder_path, '{}2{}-{}'.format(conditional_name, content_name, os.path.basename(file_name)))
 
         midi_obj.dump(save_path)    
 
