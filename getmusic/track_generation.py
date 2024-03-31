@@ -132,7 +132,7 @@ def get_args():
     parser.add_argument('--cudnn_deterministic', action='store_true', 
                         help='set cudnn.deterministic True')
     parser.add_argument('--amp', action='store_true', default=False,
-                        help='automatic mixture of precesion')
+                        help='automatic mixture of precision')
     parser.add_argument('--do_sample', action='store_false', default=True)
     parser.add_argument('--conditional_name', type=str, default=None)
     parser.add_argument('--content_name', type=str, default=None)
@@ -671,7 +671,7 @@ def main():
         #     conditional_track[6] = True
         
         if all(conditional_track):
-            print('You can\'t set all tracks as condition. We conduct uncontional generation based on selected content tracks. If you skip content tracks, this song is skipped.')
+            print('You can\'t set all tracks as condition. We conduct unconditional generation based on selected content tracks. If you skip content tracks, this song is skipped.')
             
         content_track = np.array([False, False, False, False, False, False, False])
         content_name = input('Select content tracks (\'b\' for bass, \'d\' for drums, \'g\' for guitar, \'l\' for lead, \'p\' for piano, \'s\' for strings; multiple choices):')
