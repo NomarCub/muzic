@@ -684,7 +684,7 @@ def main_worker(local_rank, args):
 
         midi_obj = encoding_to_MIDI(oct_final, tpc, args.decode_chord)
 
-        save_path = os.path.join(args.file_path, 'position-{}'.format(file_name.split('/')[-1]))
+        save_path = os.path.join(args.file_path, 'position-{}'.format(os.path.basename(file_name)))
 
         midi_obj.dump(save_path)    
 
