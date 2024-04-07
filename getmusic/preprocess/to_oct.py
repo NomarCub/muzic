@@ -14,6 +14,7 @@ import hashlib
 from multiprocessing import Pool, Lock, Manager
 import random
 import numpy as np
+from utils import is_midi_file
 sys.path.append('/'.join(os.path.abspath(__file__).split('/')[:-2]))
 from getmusic.utils.midi_config import *
 import pickle
@@ -549,7 +550,7 @@ if __name__ == '__main__':
     file_list = []
     for (dirpath, dirnames, filenames) in os.walk(data_path):
         for filename in filenames:
-            if filename.endswith('.mid'): 
+            if is_midi_file(filename): 
                 file_list.append(os.path.join(dirpath, filename))
     file_list.sort()
     # random.shuffle(file_list)
