@@ -14,6 +14,7 @@ import math
 from getmusic.utils.midi_config import *
 from getmusic.utils.magenta_chord_recognition import infer_chords_for_sequence, _key_chord_distribution,\
     _key_chord_transition_distribution
+from utils import is_midi_file
 
 NODE_RANK = os.environ['INDEX'] if 'INDEX' in os.environ else 0
 NODE_RANK = int(NODE_RANK)
@@ -632,12 +633,12 @@ def main():
     assert args.load_path is not None
     solver.resume(path=args.load_path)
 
-    is_single_file_path = str(args.file_path).endswith('.mid') or str(args.file_path).endswith('.midi')
+    is_single_file_path = is_midi_file(args.file_path)
     if is_single_file_path:
         file_list = [args.file_path]
         folder_path = os.path.dirname(args.file_path)
     else:
-        file_list = [os.path.join(args.file_path, n) for n in os.listdir(args.file_path) if (n[-4:].lower() == '.mid' or n[-5:].lower() == '.midi')]# and ('iter' not in n.lower())]
+        file_list = [os.path.join(args.file_path, n) for n in os.listdir(args.file_path) if is_midi_file(n)]# and ('iter' not in n.lower())]
         file_list.sort()
         folder_path = args.file_path
 
