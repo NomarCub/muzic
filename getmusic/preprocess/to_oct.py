@@ -4,22 +4,18 @@
 
 import os
 import sys
-import io
-import zipfile
 import miditoolkit
-import time
 import math
 import signal
 import hashlib
 from multiprocessing import Pool, Lock, Manager
-import random
 import numpy as np
 from utils import is_midi_file
 sys.path.append('/'.join(os.path.abspath(__file__).split('/')[:-2]))
 from getmusic.utils.midi_config import *
 import pickle
 from getmusic.utils.magenta_chord_recognition import infer_chords_for_sequence, _key_chord_distribution,\
-    _key_chord_transition_distribution, _CHORDS, _PITCH_CLASS_NAMES, NO_CHORD
+    _key_chord_transition_distribution
 
 pos_in_bar = beat_note_factor * max_notes_per_bar * pos_resolution
 data_zip = None
