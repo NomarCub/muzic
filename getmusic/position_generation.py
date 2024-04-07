@@ -158,6 +158,9 @@ def get_args():
     parser.add_argument('--skip_step', type=int, default=0)
     parser.add_argument('--decode_chord', action='store_true', default=False)
     parser.add_argument('--no_ema', action='store_false', default=True)
+    parser.add_argument('--batch', action=argparse.BooleanOptionalAction)
+    parser.add_argument('--condition_positions', type=str, default=None)
+    parser.add_argument('--empty_positions', type=str, default=None)
     
     # args for modify config
     parser.add_argument(
@@ -494,7 +497,7 @@ def create_pos_from_str(str_cmd, pos):
             pos[int(track_id) * 2 + 1][int(start_pos):] = 1
     return pos
 
-def F(file_name):
+def F(file_name, args):
     
     global tokens_to_ids
     global ids_to_tokens
@@ -598,8 +601,14 @@ def F(file_name):
     print('Representation Visualization:')
     print('\t0,1,2,3,4,5,6,7,8,...\n(0)lead\n(1)bass\n(2)drum\n(3)guitar\n(4)piano\n(5)string\n(6)chord')
     print('Example: condition on 100 to 200 position of lead, 300 to 400 position of piano, write command like this:\'0,100,200;4,300,400')
-    condition_str = input('Input positions you want to condition on:')
-    empty_str = input('Input positions you want to empty:')
+    if args.batch:
+        assert args.condition_positions is not None
+        assert args.empty_positions is not None
+        condition_str = args.condition_positions
+        empty_str = args.empty_positions
+    else:
+        condition_str = input('Input positions you want to condition on:')
+        empty_str = input('Input positions you want to empty:')
 
     empty_pos = torch.zeros_like(datum)
     condition_pos = torch.zeros_like(datum)
@@ -673,7 +682,7 @@ def main_worker(local_rank, args):
             if 'y' in y:
                 continue
 
-        x, tempo, not_empty_pos, condition_pos, pitch_shift, tpc = F(file_name)
+        x, tempo, not_empty_pos, condition_pos, pitch_shift, tpc = F(file_name, args)
 
         oct_line = solver.infer_sample(x, tempo, not_empty_pos, condition_pos, use_ema=args.no_ema, skip_step=args.skip_step)
         
