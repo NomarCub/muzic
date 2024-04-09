@@ -95,6 +95,13 @@ Input positions you want to empty: 1,0,;4,0,;5,0,
 
 In this example, the specified conditions are the first 200 time units of the lead track and the entire chord track. The empty positions include the entire bass, piano, and string tracks. 
 
+### Batch mode
+
+`track_generation.py` and `position_generation.py` can be called with a MIDI file instead of a folder. This forwards past the file-skipping input in the beginning.  
+You can add also add `--batch` to skip all interactive input.  
+For `track_generation.py` you neeed to specify tracks with `--condition_tracks` and `--content_tracks`.  
+For `position_generation.py` you need to specify positions with `--condition_positions` and `--empty_positions`.
+
 ### 2.3 Chord Guidance
 
 All the examples mentioned above use chord guidance, which is automatically inferred from the input tracks. If you want to generate tracks from scratch but condition them on chords, the simplest way is to input a song with the desired chord progression and let the model infer the chords.
